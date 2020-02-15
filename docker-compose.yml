@@ -1,0 +1,34 @@
+version: '2'
+
+services: 
+
+    kafka-cluster:
+        image: landoop/fast-data-dev:latest
+        environment: 
+            ADV_HOST: 127.0.0.1     # change to 192.168.99.100 if using docker toolbox
+            RUNTESTS: 0
+        volumes:
+            - ./:/tutorial
+        ports: 
+            - 2181:2181             # zookepeer
+            - 3030:3030             # landoop ui
+            - 8081-8083:8081-8083   # rest proxy, schema registry, kafka connect ports
+            - 9581-9585:9581-9585   # jmx ports
+            - 9092:9092             # kafka broker
+
+    elasticsearch:
+        image: itzg/elasticsearch:2.4.3
+        environment: 
+            PLUGINS: appbaseio/dejavu
+            OPTS: -Dindex.number_of_shards=1 -Dindex.number_of_replicas=0
+        ports: 
+            - 9200:9200
+
+    postgres:
+        image: postgres:9.5-alpine
+        environment: 
+            POSTGRES_USER: postgres
+            POSTGRES_PASSWORD: postgres
+            POSTGRES_DB: postgres
+        ports:
+            - 5432:5432
