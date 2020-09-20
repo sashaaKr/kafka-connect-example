@@ -7,7 +7,7 @@ Requirements: [twitter dev account shoulb be created before](https://github.com/
 docker-compose up kafka-cluster
 # http://localhost:3030 to see that everything are running
 
-docker run --rm -it --net=host landoop/fast-data-dev bash
+docker run --rm -it --net=host lensesio/fast-data-dev bash
 kafka-topics --create --topic demo-twitter \
 --partitions 3 \
 --replication-factor 1 \

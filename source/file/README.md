@@ -6,7 +6,7 @@ docker-compose up kafka-cluster
 
 # map volumes into docker container
 # should be executed from the root of the project
-docker run --rm -it -v "$(pwd)":/tutorial --net=host landoop/fast-data-dev bash
+docker run --rm -it -v "$(pwd)":/tutorial --net=host lensesio/fast-data-dev bash
 kafka-topics --create \
 --topic demo-1-standalone \
 --partitions 3 \
@@ -31,7 +31,7 @@ connect-standalone worker.properties file-stream-demo-standalone.properties
 docker-compose up kafka-cluster
 # map volumes into docker container
 # should be executed from the root of the project
-docker run --rm -it -v "$(pwd)":/tutorial --net=host landoop/fast-data-dev bash
+docker run --rm -it -v "$(pwd)":/tutorial --net=host lensesio/fast-data-dev bash
 
 kafka-topics --create --topic demo-2-distributed \
 --partitions 3 \
@@ -67,7 +67,7 @@ echo "hi" >> demo-file.txt
 
 
 # we can now read data from topic
-docker run --rm -it --net=host landoop/fast-data-dev bash
+docker run --rm -it --net=host lensesio/fast-data-dev bash
 kafka-console-consumer --topic demo-2-distributed \
 --from-beginning \
 --bootstrap-server 127.0.0.1:9092

@@ -1,0 +1,64 @@
+version: '3.6'
+
+services: 
+
+    kafka-cluster:
+        image: lensesio/fast-data-dev:latest
+        networks:
+          - localnet
+        environment: 
+            ADV_HOST: 127.0.0.1     # change to 192.168.99.100 if using docker toolbox
+            RUNTESTS: 0
+        volumes:
+            - ./mongo-native-connector/lib/mongo-kafka-1.2.0-all.jar:/connectors/mongo-native-connect.jar
+        ports: 
+            - 2181:2181             # zookepeer
+            - 3030:3030             # landoop ui
+            - 8081-8083:8081-8083   # rest proxy, schema registry, kafka connect ports
+            - 9581-9585:9581-9585   # jmx ports
+            - 9092:9092             # kafka broker
+
+    mongo1:
+      image: "mongo:4.0-xenial"
+      container_name: mongo1
+      command: --replSet rs0 --smallfiles --oplogSize 128
+      networks:
+        - localnet
+      volumes:
+        - rs1:/data/db
+      ports:
+        - "27017:27017"
+      restart: always
+
+    mongo2:
+      image: "mongo:4.0-xenial"
+      container_name: mongo2
+      command: --replSet rs0 --smallfiles --oplogSize 128
+      networks:
+        - localnet
+      volumes:
+        - rs2:/data/db
+      ports:
+        - "27018:27017"
+      restart: always
+      
+    mongo3:
+      image: "mongo:4.0-xenial"
+      container_name: mongo3
+      command: --replSet rs0 --smallfiles --oplogSize 128
+      networks:
+        - localnet
+      volumes:
+        - rs3:/data/db
+      ports:
+        - "27019:27017"
+      restart: always
+      
+networks:
+  localnet:
+    attachable: true
+
+volumes:
+  rs1:
+  rs2:
+  rs3:
