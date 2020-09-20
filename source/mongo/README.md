@@ -25,7 +25,7 @@ docker-compose exec mongo1 /usr/bin/mongo --eval '''if (rs.status()["ok"] == 0) 
     rs.initiate(rsconf);
 }
 rs.conf();'''
-# now connection to mongo should be available on locolhost:27017
+# now connection to mongo should be available on localhost:27017
 
 
 # create mongo source connector
