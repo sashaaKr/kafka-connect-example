@@ -2,6 +2,7 @@
 
 ```bash
 docker-compose up kafka-cluster
+# http://localhost:3030 to see that everything are running
 
 # map volumes into docker container
 # should be executed from the root of the project
@@ -12,7 +13,7 @@ kafka-topics --create \
 --replication-factor 1 \
 --zookeeper 127.0.0.1:2181
 
-cd tutorial/source/file-connector
+cd tutorial/source/file
 
 # create standalone connector
 connect-standalone worker.properties file-stream-demo-standalone.properties
