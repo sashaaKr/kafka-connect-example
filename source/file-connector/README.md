@@ -12,12 +12,12 @@ kafka-topics --create \
 --replication-factor 1 \
 --zookeeper 127.0.0.1:2181
 
-cd tutorial/source/demo1
+cd tutorial/source/file-connector
 
 # create standalone connector
 connect-standalone worker.properties file-stream-demo-standalone.properties
 
-# now go source/demo1/ edit demo-file.txt and save it,
+# now go source/file-connector/ edit demo-file.txt and save it,
 # go to http://localhost:3030/kafka-topics-ui/#/cluster/fast-data-dev/topic/n/demo-1-standalone/
 # you will see your edit in topic
 # pay attention that each line have be ended with \n
