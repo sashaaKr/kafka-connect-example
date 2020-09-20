@@ -48,3 +48,5 @@ kafka-console-consumer --topic mongo.test.pageviews \
 --bootstrap-server 127.0.0.1:9092
 # make CRUD operations in db and get them in consumer
 ```
+
+Inspiration of how create mongo cluster taken from: https://github.com/mongodb/mongo-kafka/blob/master/docker/run.sh
