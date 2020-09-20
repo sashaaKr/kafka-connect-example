@@ -59,7 +59,6 @@ curl -X POST   /api/kafka-connect/connectors   -H 'Content-Type: application/jso
 
 # in order to see that it works file should be created on kafka connect cluster - one that we created in the first line  docker-compose up kafka-cluster
 # so that we need is to enter connect of cluster and create there file
-
 KAFKA_CLUSTER=$(docker inspect --format="{{.Id}}" kafka-connect-example_kafka-cluster_1)
 docker exec -it $KAFKA_CLUSTER bash
 touch demo-file.txt
