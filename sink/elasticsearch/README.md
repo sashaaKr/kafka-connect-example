@@ -1,3 +1,5 @@
+Prerequisites: [twitter connector](../../source/twitter/) should be up and running
+
 ```bash
 docker-compose up
 # to make sure that elastic is up and running visit: http://127.0.0.1:9200/
