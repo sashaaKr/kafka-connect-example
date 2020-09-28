@@ -1,10 +1,12 @@
 Based on [pluralsight course](https://app.pluralsight.com/library/courses/kafka-connect-fundamentals/table-of-contents).
+This example use debezium docker to startup kafka broker and kafka connect, usage of some custom connectors: elasticsearch, mongodb
 
 ```bash
 # start zookeper
 docker run -it --rm \
 --name zookeeper \
 -p 2181:2181 -p 2888:2888 -p 3888:3888 \
+--network debezium-demo \
 zookeeper:3.5.5
 
 # start kafka broker
@@ -12,6 +14,7 @@ docker run -it --rm \
 --name kafka \
 -p 9092:9092 \
 --link zookeeper:zookeeper \
+--network debezium-demo \
 debezium/kafka:1.0
 
 # start mysql
@@ -23,6 +26,7 @@ docker run -it --rm \
 -e MYSQL_USER=globomantics \
 -e MYSQL_PASSWORD=password \
 -e MYSQL_DATABASE=globomantics  \
+--network debezium-demo \ 
 mysql:5.7
 
 docker run -it --rm \
@@ -45,6 +49,7 @@ docker run -it --rm --name connect -p 8083:8083 \
 --link zookeeper:zookeeper \
 --link kafka:kafka \
 --link mysql:mysql \
+--network debezium-demo \ 
 debezium/connect:1.0
 
 # kafka connect rest api shoulb be available
@@ -103,6 +108,7 @@ elasticsearch:7.4.1
 # start Kafka Connect Worker 2
 docker run -it --rm --name connect-2 -p 8084:8083 \
 -v "$(pwd)"/elastic-connector/lib:/kafka/connect/elasticsearch/ \
+-v "$(pwd)"/mongo-native-connector/lib:/kafka/connect/mongoNative/ \
 -e  GROUP_ID=1 \
 -e CONFIG_STORAGE_TOPIC=kafka_connect_configs \
 -e OFFSET_STORAGE_TOPIC=kafka_connect_offsets \
@@ -112,6 +118,10 @@ docker run -it --rm --name connect-2 -p 8084:8083 \
 --link kafka:kafka \
 --link mysql:mysql \
 --link elasticsearch:elasticsearch \
+--link mongo1:mongo1 \
+--link mongo2:mongo2 \
+--link mongo3:mongo3 \
+--network debezium-demo \
 debezium/connect:1.0
 
 # stop Kafka Connect Worker 1
@@ -120,6 +130,7 @@ docker stop connect
 # start Kafka Connect Worker 1
 docker run -it --rm --name connect-1 -p 8083:8083 \
 -v "$(pwd)"/elastic-connector/lib:/kafka/connect/elasticsearch/ \
+-v "$(pwd)"/mongo-native-connector/lib:/kafka/connect/mongoNative/ \
 -e  GROUP_ID=1 \
 -e CONFIG_STORAGE_TOPIC=kafka_connect_configs \
 -e OFFSET_STORAGE_TOPIC=kafka_connect_offsets \
@@ -129,6 +140,10 @@ docker run -it --rm --name connect-1 -p 8083:8083 \
 --link kafka:kafka \
 --link mysql:mysql \
 --link elasticsearch:elasticsearch \
+--link mongo1:mongo1 \
+--link mongo2:mongo2 \
+--link mongo3:mongo3 \
+--network debezium-demo \
 debezium/connect:1.0
 
 # deploy elasticsearch task

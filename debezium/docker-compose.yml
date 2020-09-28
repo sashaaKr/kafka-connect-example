@@ -1,0 +1,96 @@
+version: '3.6'
+
+services: 
+
+    zookeeper:
+      image: zookeeper:3.5.5
+      ports: 
+        - 2181:2181
+        - 2888:2888
+        - 3888:3888
+
+    kafka:
+      image: debezium/kafka:1.0
+      ports: 
+        - 9092:9092
+      depends_on:
+        - zookeeper
+
+    connect-1:
+      image: debezium/connect:1.0
+      depends_on:
+        - kafka
+      volumes:
+        - ./elastic-connector/lib:/kafka/connect/elasticsearch/
+        - ./mongo-native-connector/lib:/kafka/connect/mongoNative/
+      ports: 
+        - 8083:8083
+      environment:
+        GROUP_ID: 1
+        CONFIG_STORAGE_TOPIC: kafka_connect_configs
+        OFFSET_STORAGE_TOPIC: kafka_connect_offsets
+        STATUS_STORAGE_TOPIC: kafka_connect_statuses
+        KAFKA_CONNECT_PLUGINS_DIR: /kafka/connect/
+        BOOTSTRAP_SERVERS: kafka:9092
+
+    connect-2:
+      image: debezium/connect:1.0
+      depends_on:
+        - kafka
+      volumes:
+        - ./elastic-connector/lib:/kafka/connect/elasticsearch/
+        - ./mongo-native-connector/lib:/kafka/connect/mongoNative/
+      ports:
+        - 8084:8083
+      environment:
+        GROUP_ID: 1
+        CONFIG_STORAGE_TOPIC: kafka_connect_configs
+        OFFSET_STORAGE_TOPIC: kafka_connect_offsets
+        STATUS_STORAGE_TOPIC: kafka_connect_statuses
+        KAFKA_CONNECT_PLUGINS_DIR: /kafka/connect/
+        BOOTSTRAP_SERVERS: kafka:9092
+
+    mongo1:
+      image: "mongo:4.0-xenial"
+      container_name: mongo1
+      command: --replSet rs0 --smallfiles --oplogSize 128
+      networks:
+        - localnet
+      volumes:
+        - rs1:/data/db
+      ports:
+        - "27017:27017"
+      restart: always
+
+    mongo2:
+      image: "mongo:4.0-xenial"
+      container_name: mongo2
+      command: --replSet rs0 --smallfiles --oplogSize 128
+      networks:
+        - localnet
+      volumes:
+        - rs2:/data/db
+      ports:
+        - "27018:27017"
+      restart: always
+      
+    mongo3:
+      image: "mongo:4.0-xenial"
+      container_name: mongo3
+      command: --replSet rs0 --smallfiles --oplogSize 128
+      networks:
+        - localnet
+      volumes:
+        - rs3:/data/db
+      ports:
+        - "27019:27017"
+      restart: always
+      
+networks:
+  localnet:
+    attachable: true
+
+volumes:
+  rs1:
+  rs2:
+  rs3:
