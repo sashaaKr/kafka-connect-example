@@ -1,6 +1,7 @@
 Based on [pluralsight course](https://app.pluralsight.com/library/courses/kafka-connect-fundamentals/table-of-contents).
 This example use debezium docker to startup kafka broker and kafka connect, usage of some custom connectors: elasticsearch, mongodb
 
+You can run those commands mannualy:
 ```bash
 # start zookeper
 docker run -it --rm \
@@ -165,4 +166,23 @@ curl -i -X POST -H "Accept:application/json" -H "Content-Type:application/json" 
 
 # you can verify going in browser to: http://localhost:9200/globomantics.globomantics.articles/_search
 
+```
+
+
+or you can use `docker-compose` file (TODO: add elastic to compose file):
+```bash
+docker compose up
+
+docker-compose exec mongo1 /usr/bin/mongo --eval '''if (rs.status()["ok"] == 0) {
+    rsconf = {
+      _id : "rs0",
+      members: [
+        { _id : 0, host : "mongo1:27017", priority: 1.0 },
+        { _id : 1, host : "mongo2:27017", priority: 0.5 },
+        { _id : 2, host : "mongo3:27017", priority: 0.5 }
+      ]
+    };
+    rs.initiate(rsconf);
+}
+rs.conf();'''
 ```
